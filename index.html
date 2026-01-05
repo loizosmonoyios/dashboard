@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="el">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>STEM LAB – Ταμπλό Αυτοκινήτου (Προσομοίωση)</title>
+    <style>
+      :root {
+        font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial;
+      }
+      body {
+        margin: 0;
+        background: #0b0e12;
+        color: #e9eef6;
+      }
+      header {
+        padding: 16px 18px;
+        border-bottom: 1px solid #1e2633;
+        display: flex;
+        gap: 12px;
+        align-items: center;
+        justify-content: space-between;
+      }
+      header h1 {
+        font-size: 16px;
+        margin: 0;
+        font-weight: 650;
+        letter-spacing: 0.2px;
+      }
+      header small {
+        color: #9fb0c6;
+      }
+      main {
+        display: grid;
+        grid-template-columns: 1.1fr 0.9fr;
+        gap: 14px;
+        padding: 14px;
+      }
+      .card {
+        background: #111722;
+        border: 1px solid #1f2a3a;
+        border-radius: 14px;
+        padding: 14px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 12px;
+      }
+      .metric {
+        padding: 12px;
+        border-radius: 12px;
+        background: #0e1420;
+        border: 1px solid #1d2940;
+      }
+      .metric .label {
+        font-size: 12px;
+        color: #9fb0c6;
+      }
+      .metric .value {
+        font-size: 26px;
+        font-weight: 750;
+        margin-top: 6px;
+      }
+      .metric .unit {
+        font-size: 12px;
+        color: #9fb0c6;
+        margin-left: 6px;
+        font-weight: 600;
+      }
+      .row {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .controls {
+        display: grid;
+        gap: 12px;
+      }
+      .control {
+        padding: 12px;
+        border-radius: 12px;
+        background: #0e1420;
+        border: 1px solid #1d2940;
+      }
+      .control label {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        font-size: 12px;
+        color: #9fb0c6;
+        margin-bottom: 8px;
+      }
+      input[type="range"] {
+        width: 100%;
+      }
+      .toggles {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+      }
+      .toggle {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+        align-items: center;
+        padding: 10px;
+        border-radius: 12px;
+        background: #0e1420;
+        border: 1px solid #1d2940;
+      }
+      .toggle span {
+        font-size: 13px;
+        color: #d7e2f2;
+      }
+      .btns {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+      button {
+        background: #1a263a;
+        color: #e9eef6;
+        border: 1px solid #2a3b58;
+        padding: 10px 12px;
+        border-radius: 12px;
+        cursor: pointer;
+        font-weight: 650;
+      }
+      button:hover {
+        filter: brightness(1.08);
+      }
+      .lights {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 12px;
+      }
+      .lamp {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid #26354f;
+        background: #0e1420;
+        font-size: 12px;
+        color: #b8c7dc;
+      }
+      .dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: #2b3443;
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+      }
+      .on.red .dot {
+        background: #ff4d4d;
+      }
+      .on.amber .dot {
+        background: #ffb020;
+      }
+      .on.blue .dot {
+        background: #46a3ff;
+      }
+      .on.green .dot {
+        background: #2bd46a;
+      }
+      .hint {
+        color: #9fb0c6;
+        font-size: 12px;
+        line-height: 1.35;
+      }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+      th,
+      td {
+        border-bottom: 1px solid #1f2a3a;
+        padding: 8px 6px;
+        text-align: left;
+        vertical-align: top;
+      }
+      th {
+        color: #9fb0c6;
+        font-weight: 650;
+      }
+      .kbd {
+        font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        background: #0e1420;
+        border: 1px solid #1d2940;
+        padding: 2px 6px;
+        border-radius: 8px;
+      }
+      .footer {
+        padding: 0 14px 14px;
+        color: #8fa3be;
+        font-size: 12px;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div>
+        <h1>STEM LAB – Ταμπλό Αυτοκινήτου (Ψηφιακή Προσομοίωση)</h1>
+        <small
+          >Ρόλος Πληροφορικής: μεταβλητές, μετρήσεις, αιτιολόγηση,
+          διάγνωση</small
+        >
+      </div>
+      <div class="row">
+        <button id="btnReset">Επαναφορά</button>
+        <button id="btnLog">Καταγραφή μέτρησης</button>
+        <button id="btnCSV">Εξαγωγή CSV</button>
+      </div>
+    </header>
+
+    <main>
+      <!-- DASHBOARD -->
+      <section class="card">
+        <div class="grid">
+          <div class="metric">
+            <div class="label">Ταχύτητα</div>
+            <div class="value">
+              <span id="speed">0</span><span class="unit">km/h</span>
+            </div>
+          </div>
+          <div class="metric">
+            <div class="label">Στροφές κινητήρα</div>
+            <div class="value">
+              <span id="rpm">800</span><span class="unit">rpm</span>
+            </div>
+          </div>
+          <div class="metric">
+            <div class="label">Τάση συστήματος</div>
+            <div class="value">
+              <span id="volt">12.6</span><span class="unit">V</span>
+            </div>
+          </div>
+          <div class="metric">
+            <div class="label">Θερμοκρασία ψυκτικού</div>
+            <div class="value">
+              <span id="temp">85</span><span class="unit">°C</span>
+            </div>
+          </div>
+          <div class="metric">
+            <div class="label">Καύσιμο</div>
+            <div class="value">
+              <span id="fuel">60</span><span class="unit">%</span>
+            </div>
+          </div>
+          <div class="metric">
+            <div class="label">Ρεύμα φορτίου</div>
+            <div class="value">
+              <span id="amps">8.0</span><span class="unit">A</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="lights" aria-label="Λυχνίες">
+          <div id="lampBattery" class="lamp red">
+            <span class="dot"></span>BATTERY
+          </div>
+          <div id="lampCheck" class="lamp amber">
+            <span class="dot"></span>CHECK ENGINE
+          </div>
+          <div id="lampOverheat" class="lamp red">
+            <span class="dot"></span>OVERHEAT
+          </div>
+          <div id="lampLights" class="lamp blue">
+            <span class="dot"></span>LIGHTS
+          </div>
+          <div id="lampFan" class="lamp green">
+            <span class="dot"></span>FAN
+          </div>
+        </div>
+
+        <div style="margin-top: 12px" class="hint">
+          <b>Στόχος διάγνωσης:</b> Παρατήρησε πώς αλλάζει η
+          <span class="kbd">Τάση</span> όταν αυξάνεις τα
+          <span class="kbd">φορτία</span> ή μειώνεις την
+          <span class="kbd">κατάσταση μπαταρίας</span>. Κατέγραψε 3–6 μετρήσεις
+          και βγάλε συμπέρασμα.
+        </div>
+      </section>
+
+      <!-- CONTROLS -->
+      <aside class="card controls">
+        <div class="control">
+          <label
+            ><span>Κατάσταση μπαταρίας (SoC)</span
+            ><span><b id="socLbl">80</b>%</span></label
+          >
+          <input id="soc" type="range" min="0" max="100" value="80" />
+          <div class="hint">
+            Χαμηλό SoC → πιθανή πτώση τάσης ειδικά υπό φορτίο.
+          </div>
+        </div>
+
+        <div class="control">
+          <label
+            ><span>Στροφές κινητήρα</span
+            ><span><b id="rpmLbl">800</b> rpm</span></label
+          >
+          <input
+            id="rpmIn"
+            type="range"
+            min="600"
+            max="4000"
+            step="50"
+            value="800"
+          />
+          <div class="hint">
+            Σε υψηλότερες στροφές ο εναλλάκτης “φορτίζει” καλύτερα (αν δεν
+            υπάρχει βλάβη).
+          </div>
+        </div>
+
+        <div class="control">
+          <label
+            ><span>Θερμοκρασία</span
+            ><span><b id="tempLbl">85</b> °C</span></label
+          >
+          <input id="tempIn" type="range" min="40" max="120" value="85" />
+        </div>
+
+        <div class="control">
+          <label
+            ><span>Καύσιμο</span><span><b id="fuelLbl">60</b>%</span></label
+          >
+          <input id="fuelIn" type="range" min="0" max="100" value="60" />
+        </div>
+
+        <div class="toggles">
+          <div class="toggle">
+            <span>Φώτα</span>
+            <input id="tLights" type="checkbox" />
+          </div>
+          <div class="toggle">
+            <span>Ανεμιστήρας</span>
+            <input id="tFan" type="checkbox" />
+          </div>
+          <div class="toggle">
+            <span>Θερμ. τζάμι</span>
+            <input id="tDef" type="checkbox" />
+          </div>
+          <div class="toggle">
+            <span>“Βλάβη” εναλλάκτη</span>
+            <input id="tAltFault" type="checkbox" />
+          </div>
+        </div>
+
+        <div class="btns">
+          <button id="btnScenario1">Σενάριο: Χαμηλή μπαταρία</button>
+          <button id="btnScenario2">Σενάριο: Βλάβη εναλλάκτη</button>
+          <button id="btnScenario3">Σενάριο: Υπερθέρμανση</button>
+        </div>
+
+        <div class="control">
+          <div class="hint">
+            <b>Παραδοτέο (Πληροφορική):</b> Πίνακας μετρήσεων (CSV) + 3
+            προτάσεις αιτιολόγησης (αιτία → αποτέλεσμα).<br />
+            <b>Παραδοτέο (Μηχανική):</b> Πιθανή βλάβη + προτεινόμενη ενέργεια
+            τεχνικού.
+          </div>
+        </div>
+      </aside>
+
+      <!-- LOG TABLE -->
+      <section class="card" style="grid-column: 1 / -1">
+        <div class="row" style="justify-content: space-between">
+          <div>
+            <b>Πίνακας Μετρήσεων</b>
+            <div class="hint">
+              Πατάς “Καταγραφή μέτρησης” σε διαφορετικές συνθήκες.
+            </div>
+          </div>
+          <div class="row">
+            <button id="btnClearLog">Καθαρισμός</button>
+          </div>
+        </div>
+        <div style="margin-top: 10px; overflow: auto">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>SoC%</th>
+                <th>RPM</th>
+                <th>Φορτία</th>
+                <th>Ρεύμα (A)</th>
+                <th>Τάση (V)</th>
+                <th>Θερμ. (°C)</th>
+                <th>Σχόλιο μαθητή</th>
+              </tr>
+            </thead>
+            <tbody id="logBody"></tbody>
+          </table>
+        </div>
+      </section>
+    </main>
+
+    <div class="footer">
+      Tip: Αν θες “συνεργατική” χρήση, μπορείς να το ενσωματώσεις ως
+      δραστηριότητα σε Graasp (iframe/σύνδεσμος) και να ζητήσεις screenshot +
+      CSV.
+    </div>
+
+    <script>
+      // ------- State -------
+      const state = {
+        soc: 80,
+        rpm: 800,
+        temp: 85,
+        fuel: 60,
+        loads: { lights: false, fan: false, def: false },
+        altFault: false, // if true, alternator is not charging properly
+        log: [],
+      };
+
+      // Load model (simplified but educational):
+      // - Base system voltage depends on charging state:
+      //   * Engine OFF-ish (low rpm): voltage near battery
+      //   * Engine ON and alternator OK: 13.6–14.4 V depending on rpm and SOC
+      // - Loads draw current; higher current causes voltage drop (internal resistance proxy)
+      // - Low SOC increases effective resistance + reduces open-circuit voltage
+      function compute() {
+        const soc = state.soc / 100;
+
+        // Battery open-circuit voltage approximation (11.6–12.7)
+        const voc = 11.6 + 1.1 * soc;
+
+        // Alternator contribution
+        let vcharge = voc;
+        const engineOn = state.rpm >= 650;
+        if (engineOn && !state.altFault) {
+          const rpmFactor = Math.min(1, Math.max(0, (state.rpm - 700) / 2500)); // 0..1
+          // target charge voltage 13.6..14.4 influenced by rpm and soc
+          const target = 13.6 + 0.8 * rpmFactor + 0.2 * soc;
+          // blend with voc
+          vcharge = Math.max(voc, target);
+        }
+
+        // Load current (A) rough:
+        let amps = 3.0; // base electronics
+        if (state.loads.lights) amps += 8.0;
+        if (state.loads.fan) amps += 10.0;
+        if (state.loads.def) amps += 12.0;
+
+        // Effective internal resistance grows when SOC low
+        const r = 0.04 + (1 - soc) * 0.06; // 0.04..0.10 ohm proxy
+
+        // Voltage drop due to load
+        let v = vcharge - amps * r;
+
+        // Temperature effect: very high temp can cause warnings (not directly voltage)
+        // Clamp
+        v = Math.max(9.5, Math.min(14.8, v));
+
+        // Speed just for "dashboard feel"
+        const speed = Math.max(0, Math.round((state.rpm - 700) / 25)); // simple mapping
+
+        return { voc, v, amps, speed };
+      }
+
+      // ------- UI helpers -------
+      const $ = (id) => document.getElementById(id);
+      function setLamp(el, on, colorClass) {
+        el.classList.toggle("on", !!on);
+        el.classList.toggle("red", colorClass === "red");
+        el.classList.toggle("amber", colorClass === "amber");
+        el.classList.toggle("blue", colorClass === "blue");
+        el.classList.toggle("green", colorClass === "green");
+      }
+
+      function update() {
+        const { v, amps, speed } = compute();
+
+        $("speed").textContent = speed;
+        $("rpm").textContent = state.rpm;
+        $("volt").textContent = v.toFixed(1);
+        $("temp").textContent = state.temp;
+        $("fuel").textContent = state.fuel;
+        $("amps").textContent = amps.toFixed(1);
+
+        $("socLbl").textContent = state.soc;
+        $("rpmLbl").textContent = state.rpm;
+        $("tempLbl").textContent = state.temp;
+        $("fuelLbl").textContent = state.fuel;
+
+        // Lamps logic
+        // Battery lamp ON when voltage < 12.2 with engine on OR alternator fault toggled
+        const engineOn = state.rpm >= 650;
+        const batteryWarn = state.altFault || (engineOn && v < 12.2);
+        setLamp($("lampBattery"), batteryWarn, "red");
+
+        // Check engine: turn on if alternator fault OR extreme undervoltage
+        const check = state.altFault || v < 11.5;
+        setLamp($("lampCheck"), check, "amber");
+
+        // Overheat
+        const overheat = state.temp >= 110;
+        setLamp($("lampOverheat"), overheat, "red");
+
+        // Loads indicators
+        setLamp($("lampLights"), state.loads.lights, "blue");
+        setLamp($("lampFan"), state.loads.fan, "green");
+      }
+
+      function renderLog() {
+        const tbody = $("logBody");
+        tbody.innerHTML = "";
+        state.log.forEach((row, i) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML = `
+        <td>${i + 1}</td>
+        <td>${row.soc}</td>
+        <td>${row.rpm}</td>
+        <td>${row.loads}</td>
+        <td>${row.amps}</td>
+        <td>${row.volt}</td>
+        <td>${row.temp}</td>
+        <td>${row.note}</td>
+      `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      function logMeasurement() {
+        const { v, amps } = compute();
+        const loads =
+          [
+            state.loads.lights ? "Φώτα" : null,
+            state.loads.fan ? "Ανεμιστήρας" : null,
+            state.loads.def ? "Θερμ.τζάμι" : null,
+          ]
+            .filter(Boolean)
+            .join(", ") || "—";
+
+        const note = prompt(
+          "Σχόλιο μαθητή (αιτία → αποτέλεσμα):",
+          "π.χ. Άνοιξα φορτία και έπεσε η τάση."
+        );
+        state.log.push({
+          soc: state.soc,
+          rpm: state.rpm,
+          loads,
+          amps: amps.toFixed(1),
+          volt: v.toFixed(1),
+          temp: state.temp,
+          note: (note ?? "").replaceAll("\n", " ").trim(),
+        });
+        renderLog();
+      }
+
+      function downloadCSV() {
+        const headers = [
+          "#",
+          "SoC%",
+          "RPM",
+          "Loads",
+          "Amps(A)",
+          "Volt(V)",
+          "Temp(C)",
+          "Note",
+        ];
+        const lines = [headers.join(",")];
+        state.log.forEach((r, idx) => {
+          const esc = (s) => `"${String(s ?? "").replaceAll('"', '""')}"`;
+          lines.push(
+            [
+              idx + 1,
+              r.soc,
+              r.rpm,
+              esc(r.loads),
+              r.amps,
+              r.volt,
+              r.temp,
+              esc(r.note),
+            ].join(",")
+          );
+        });
+        const blob = new Blob([lines.join("\n")], {
+          type: "text/csv;charset=utf-8",
+        });
+        const a = document.createElement("a");
+        a.href = URL.createObjectURL(blob);
+        a.download = "metriseis_dashboard.csv";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+      }
+
+      function resetAll() {
+        state.soc = 80;
+        state.rpm = 800;
+        state.temp = 85;
+        state.fuel = 60;
+        state.loads = { lights: false, fan: false, def: false };
+        state.altFault = false;
+        $("soc").value = state.soc;
+        $("rpmIn").value = state.rpm;
+        $("tempIn").value = state.temp;
+        $("fuelIn").value = state.fuel;
+        $("tLights").checked = false;
+        $("tFan").checked = false;
+        $("tDef").checked = false;
+        $("tAltFault").checked = false;
+        update();
+      }
+
+      // ------- Events -------
+      $("soc").addEventListener("input", (e) => {
+        state.soc = +e.target.value;
+        update();
+      });
+      $("rpmIn").addEventListener("input", (e) => {
+        state.rpm = +e.target.value;
+        update();
+      });
+      $("tempIn").addEventListener("input", (e) => {
+        state.temp = +e.target.value;
+        update();
+      });
+      $("fuelIn").addEventListener("input", (e) => {
+        state.fuel = +e.target.value;
+        update();
+      });
+
+      $("tLights").addEventListener("change", (e) => {
+        state.loads.lights = e.target.checked;
+        update();
+      });
+      $("tFan").addEventListener("change", (e) => {
+        state.loads.fan = e.target.checked;
+        update();
+      });
+      $("tDef").addEventListener("change", (e) => {
+        state.loads.def = e.target.checked;
+        update();
+      });
+      $("tAltFault").addEventListener("change", (e) => {
+        state.altFault = e.target.checked;
+        update();
+      });
+
+      $("btnReset").addEventListener("click", resetAll);
+      $("btnLog").addEventListener("click", logMeasurement);
+      $("btnCSV").addEventListener("click", downloadCSV);
+      $("btnClearLog").addEventListener("click", () => {
+        state.log = [];
+        renderLog();
+      });
+
+      // Scenarios
+      $("btnScenario1").addEventListener("click", () => {
+        state.soc = 25;
+        state.rpm = 900;
+        state.loads.lights = true;
+        state.loads.fan = false;
+        state.loads.def = false;
+        state.altFault = false;
+        $("soc").value = state.soc;
+        $("rpmIn").value = state.rpm;
+        $("tLights").checked = true;
+        $("tFan").checked = false;
+        $("tDef").checked = false;
+        $("tAltFault").checked = false;
+        update();
+      });
+      $("btnScenario2").addEventListener("click", () => {
+        state.soc = 70;
+        state.rpm = 2000;
+        state.loads.lights = true;
+        state.loads.fan = true;
+        state.loads.def = false;
+        state.altFault = true;
+        $("soc").value = state.soc;
+        $("rpmIn").value = state.rpm;
+        $("tLights").checked = true;
+        $("tFan").checked = true;
+        $("tDef").checked = false;
+        $("tAltFault").checked = true;
+        update();
+      });
+      $("btnScenario3").addEventListener("click", () => {
+        state.temp = 112;
+        $("tempIn").value = state.temp;
+        state.loads.fan = true;
+        $("tFan").checked = true;
+        update();
+      });
+
+      // init
+      update();
+    </script>
+  </body>
+</html>
